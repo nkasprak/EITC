@@ -111,7 +111,9 @@ function mainCalculate(triggered_by_slider) {
 		var wages_rounded = Math.floor(wages/50)*50 + 25;
 		
 		//Do the actual calculation next.
-		var eitc_amount = Math.round(Math.max(0, Math.min(wages_rounded, eitc_parameters[filing_status][num_children][1]["floor"]) * eitc_parameters[filing_status][num_children][0]["rate"] + Math.max(0,wages_rounded-eitc_parameters[filing_status][num_children][2]["floor"]) * eitc_parameters[filing_status][num_children][2]["rate"]))
+		var eitc_amount = Math.round(Math.max(0, Math.min(wages_rounded, eitc_parameters[filing_status][num_children][1]["floor"]) * eitc_parameters[filing_status][num_children][0]["rate"] + Math.max(0,wages_rounded-eitc_parameters[filing_status][num_children][2]["floor"]) * eitc_parameters[filing_status][num_children][2]["rate"]));
+		
+		if (wages == 0) eitc_amount = 0;
 	
 		//Write the result in the orange box.
 		$("#eitc_result_span").text(eitc_amount);
