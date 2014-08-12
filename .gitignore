@@ -214,9 +214,5 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-*.png
-*.jpg
-*.jpeg
-*.gif
 dwsync.xml
 jquery-ui-1.10.3/
