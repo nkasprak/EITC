@@ -118,3 +118,11 @@ body {
 	height:100%;
 	position:relative;
 }
+
+#chart_area svg {
+	z-index:100;	
+}
+
+.google-visualization-tooltip {
+	z-index:100;	
+}

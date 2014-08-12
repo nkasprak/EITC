@@ -125,3 +125,7 @@ body {
 	height:100%;
 	position:relative;
 }
+
+.google-visualization-tooltip {
+	z-index:100;	
+}

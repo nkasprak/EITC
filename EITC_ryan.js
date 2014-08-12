@@ -134,16 +134,16 @@ function drawChart(filing_status,num_children,base_amounts, phase_out_end, wages
     for (var counter = 0; counter < eitc_parameters[filing_status][num_children].length; counter++) {
         data_array[counter] = [eitc_parameters[filing_status][num_children][counter]["floor"],  
                                base_amounts[counter],
-                               "<span style=\"font-size:18px\"><strong>Wages&#58; &#36;</strong>" + eitc_parameters[filing_status][num_children][counter]["floor"] + "<br /><strong>EITC&#58; &#36;</strong>" +  base_amounts[counter] + "</span>"];
+                               "<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + eitc_parameters[filing_status][num_children][counter]["floor"] + "<br /><strong>EITC&#58; &#36;</strong>" +  base_amounts[counter] + "</span>"];
     }
 	
     
     //final point on trapezoid, user wages
     data_array.push(
-        [phase_out_end, 0, "<span style=\"font-size:18px\"><strong>Wages&#58; &#36;</strong>" + phase_out_end + "<br /><strong>EITC&#58; &#36;0</strong></span>"],
+        [phase_out_end, 0, "<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + phase_out_end + "<br /><strong>EITC&#58; &#36;0</strong></span>"],
         [wages,
         eitc_amount,
-        "<span style=\"font-size:18px\"><strong>Wages&#58; &#36;</strong>" + wages + "<br /><strong>EITC&#58; &#36;</strong>" +  eitc_amount + "</span>"]);
+        "<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + wages + "<br /><strong>EITC&#58; &#36;</strong>" +  eitc_amount + "</span>"]);
    
     //sort in order so user entry goes in between two points if necessary
     data_array.sort(function(arr1, arr2) {return arr1[0] - arr2[0];});
