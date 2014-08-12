@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+<script src="//use.edgefonts.net/cabin-condensed.js"></script>
+<link href="jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css">
+<link href="eitcblog_ryan.css" rel="stylesheet" type="text/css"/>
+
+<script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EITC Calculator</title>
+</head>
+
+<body>
+<!--<div id="ieFallback">
+	<p align="center"><img src="http://www.cbpp.org/images/cms//policybasics-eitc-f1-rev2-24-12.jpg" /></p>
+</div>-->
+<div id="mainContent">
+	<img src="eitc_calc_div_background_ryan_childless_only.png" id="mainContentBackground"/>
+  <div class="input" id="filingStatusDiv">
+    <select id="filingStatus_select">
+      <option value="1" selected >Single</option>
+      <option value="2">Married</option>
+    </select>
+  </div>
+  <div class="input" id="headWageIncomeDiv">
+    <div id="head_wage_income_container">
+      <input type="text" id="head_wage_income" value="12566" size="8"/>
+    </div>
+  </div>
+  
+
+  
+  <div class="input" id="childrenSelectDiv">
+    <select id="children_selector">
+      <option name="children" id="radio_0kids" value="0"  selected>None</option>
+      <option name="children" id="radio_1kids" value="1" >One</option>
+      <option name="children" id="radio_2kids" value="2" >Two</option>
+      <option name="children" id="radio_3kids" value="3" >Three</option>
+    </select>
+  </div>
+  
+  <div class="input" id="scenarioSelectDiv">
+  	<select id="scenario_selector">
+      <option name="scenario" id="current_select" value="currentLaw" selected >Current Law</option>
+      <option name="scenario" id="ryan_select" value="ryan" >Obama / Ryan Plan</option>
+    </select>
+  </div>
+   
+  
+  <div id="chart_background">
+    <div id="chart_area"> </div>
+  </div>
+  <div id="result_text_area"> 
+    <img src="eitc_amount.png"  /><br /> <div id="eitc_result_line"><strong>$<span id="eitc_result_span"></span></strong>&nbsp;&nbsp; </div></div>
+  <div id="slider_area">
+    <div id="head_slider" class="input_slider" > </div>
+  </div>
+</div>
+<div id="error_log"> </div>
+</body>
+
+
+<script type="text/javascript" src="EITC_ryan.js"></script>
+</html>
