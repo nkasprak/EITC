@@ -110,37 +110,11 @@ function mainCalculate(triggered_by_slider) {
 		//(i.e. 79->75, 149->125, 6001->6025)
 		var wages_rounded = Math.floor(wages/50)*50 + 25;
 		
-		
-		//Do the actual calculation next. There are some special cases for the "kink" points on the trapezoid.
-		
-		//Check if the next line segment exists in the first place (this will be false for the highest one)
-		if (eitc_parameters[filing_status][num_children][use_bracket+1]) {
-			
-			//Check if the wage amount is on a kink point
-			if (wages - eitc_parameters[filing_status][num_children][use_bracket+1]["floor"] == 0) {
-				
-				//Special case for kink points. Bryann, this probably where you'll want to start.
-				wages_rounded = wages;
-				eitc_amount = base_amounts[use_bracket+1];
-				
-			} else {
-				
-				//Normal situation - wage is not on a kink point.
-				eitc_amount = Math.max(0,Math.round(base_amounts[use_bracket] + (wages_rounded - eitc_parameters[filing_status][num_children][use_bracket]["floor"]) * eitc_parameters[filing_status][num_children][use_bracket]["rate"]));
-			}
-			
-		} else {
-			//Also a normal situation, just for the final line segment, but same code as above.
-			eitc_amount = Math.max(0,Math.round(base_amounts[use_bracket] + (wages_rounded - eitc_parameters[filing_status][num_children][use_bracket]["floor"]) * eitc_parameters[filing_status][num_children][use_bracket]["rate"]));
-		}
-			
-		//Otherwise 0->25 and you get a small EITC even without any wage income
-		if (wages == 0) eitc_amount = 0;
+		//Do the actual calculation next.
+		var eitc_amount = Math.round(Math.max(0, Math.min(wages_rounded, eitc_parameters[filing_status][num_children][1]["floor"]) * eitc_parameters[filing_status][num_children][0]["rate"] + Math.max(0,wages_rounded-eitc_parameters[filing_status][num_children][2]["floor"]) * eitc_parameters[filing_status][num_children][2]["rate"]))
 	
 		//Write the result in the orange box.
 		$("#eitc_result_span").text(eitc_amount);
-		
-		//$("#result_text").slideDown();
 		
 		//Draw the chart using the Google visualization library.
 		if (g_chart_loaded == true) {
@@ -150,7 +124,6 @@ function mainCalculate(triggered_by_slider) {
     } catch (ex) {
         console.log(ex);	
     }
-    
 }
 
 function drawChart(filing_status,num_children,base_amounts, phase_out_end, wages, eitc_amount, scenarioID) {
