@@ -106,15 +106,17 @@ function mainCalculate(triggered_by_slider) {
 		var phase_out_end = Math.round(	eitc_parameters[filing_status][num_children][bracket]["floor"] - 
 											base_amounts[bracket]/eitc_parameters[filing_status][num_children][bracket]["rate"]);
 																
-		//Mimic the IRS's EITC table. Round to lower 50, add 25, and calculate based on that number
+		/*//Mimic the IRS's EITC table. Round to lower 50, add 25, and calculate based on that number
 		//(i.e. 79->75, 149->125, 6001->6025)
 		var wages_rounded = Math.floor(wages/50)*50 + 25;
 		
 		//Do the actual calculation next.
 		var eitc_amount = Math.round(Math.max(0, Math.min(wages_rounded, eitc_parameters[filing_status][num_children][1]["floor"]) * eitc_parameters[filing_status][num_children][0]["rate"] + Math.max(0,wages_rounded-eitc_parameters[filing_status][num_children][2]["floor"]) * eitc_parameters[filing_status][num_children][2]["rate"]));
 		
-		if (wages == 0) eitc_amount = 0;
-	
+		if (wages == 0) eitc_amount = 0;*/
+		
+		var eitc_amount = return_eic_amount(wages, eitc_parameters[filing_status][num_children]);
+		
 		//Write the result in the orange box.
 		$("#eitc_result_span").text(eitc_amount);
 		
@@ -128,7 +130,20 @@ function mainCalculate(triggered_by_slider) {
     }
 }
 
-function drawChart(filing_status,num_children,base_amounts, phase_out_end, wages, eitc_amount, scenarioID) {
+function return_eic_amount(wages,parms) {
+	//Mimic the IRS's EITC table. Round to lower 50, add 25, and calculate based on that number
+	//(i.e. 79->75, 149->125, 6001->6025)
+	var wages_rounded = Math.floor(wages/50)*50 + 25;
+	
+	//Do the actual calculation next.
+	var eitc_amount = Math.round(Math.max(0, Math.min(wages_rounded, parms[1]["floor"]) * parms[0]["rate"] + Math.max(0,wages_rounded-parms[2]["floor"]) * parms[2]["rate"]));
+		
+	if (wages == 0) eitc_amount = 0;
+	
+	return eitc_amount;
+};
+
+function drawChart(filing_status,num_children,base_amounts, phase_out_end, user_wages, user_eitc_amount, scenarioID) {
 	
 	if (scenarioID) var eitc_parameters = g_eitc_parameters[scenarioID];
 	else var eitc_parameters = g_eitc_parameters;
@@ -136,15 +151,19 @@ function drawChart(filing_status,num_children,base_amounts, phase_out_end, wages
 	//Will store the points that define the chart, as follows:
 	//[x (wages), y (eitc amount), HTML of tooltip popup]
     var data_array = [];
-    
+    var eic_amount;
+	var wage_amount;
+	
     //Find first three points of trapezoid
     for (var counter = 0; counter < eitc_parameters[filing_status][num_children].length; counter++) {
+		wage_amount = eitc_parameters[filing_status][num_children][counter]["floor"];
+		eic_amount = return_eic_amount(eitc_parameters[filing_status][num_children][counter]["floor"],eitc_parameters[filing_status][num_children]);
         data_array[counter] = [
-			eitc_parameters[filing_status][num_children][counter]["floor"],  
-			base_amounts[counter],
+			wage_amount,  
+			eic_amount,
 			"<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + 
-				eitc_parameters[filing_status][num_children][counter]["floor"] + 
-				"<br /><strong>EITC&#58; &#36;</strong>" +  base_amounts[counter] + "</span>"
+				wage_amount + 
+				"<br /><strong>EITC&#58; &#36;</strong>" +  eic_amount + "</span>"
 		];
     }
 	
@@ -155,9 +174,9 @@ function drawChart(filing_status,num_children,base_amounts, phase_out_end, wages
 		0, 
 		"<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + phase_out_end + "<br /><strong>EITC&#58; &#36;0</strong></span>"
 	],
-	[	wages,
-		eitc_amount,
-		"<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + wages + "<br /><strong>EITC&#58; &#36;</strong>" +  eitc_amount + "</span>"
+	[	user_wages,
+		user_eitc_amount,
+		"<span style=\"font-size:15px\"><strong>Wages&#58; &#36;</strong>" + user_wages + "<br /><strong>EITC&#58; &#36;</strong>" +  user_eitc_amount + "</span>"
 	]);
    
     //Sort in order so user entry goes in between two points if necessary
@@ -231,7 +250,7 @@ function drawChart(filing_status,num_children,base_amounts, phase_out_end, wages
 	//Set the calculated point to be the actively selected one in the chart.
     var use_counter = 0;
     for (var counter = 0;counter<data_array.length;counter++) {
-        if (data_array[counter][0] == wages) {
+        if (data_array[counter][0] == user_wages) {
             use_counter = counter;	
         }
     }
