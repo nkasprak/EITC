@@ -79,32 +79,11 @@ function mainCalculate(triggered_by_slider) {
   		//Get number of children
 		var num_children = $('#children_selector').val();
 		
-		//This will also store some derived quantities.
-		var base_amounts = Array();
-		base_amounts[0] = 0;
-		
-		//Basically, this will store the result of figuring out "which of the three line segments do we use?"
-		var use_bracket = 0;
-		
-		//Loop through the array of trapezoid lines...
-		for (var bracket = 1; bracket < eitc_parameters[filing_status][num_children].length; bracket++) {
-			
-			//Calculate the initial EITC amount at the start of the line.
-			base_amounts[bracket] = Math.round(base_amounts[bracket - 1] + 
-										 eitc_parameters[filing_status][num_children][bracket]["floor"] * 
-										 eitc_parameters[filing_status][num_children][bracket - 1]["rate"]);
-			
-			//If wages exceed the beginning of the line segment, use it. Since we're looping from left to right,
-			//we'll end up using the correct one this way.
-			if (wages > eitc_parameters[filing_status][num_children][bracket]["floor"]) {
-				use_bracket = bracket;	
-			}
-		}
-		
 		//Calculate the final point at the end of the phase-out
 		bracket = eitc_parameters[filing_status][num_children].length-1;
-		var phase_out_end = Math.round(	eitc_parameters[filing_status][num_children][bracket]["floor"] - 
-											base_amounts[bracket]/eitc_parameters[filing_status][num_children][bracket]["rate"]);
+		var phase_out_start = return_eic_amount(eitc_parameters[filing_status][num_children][bracket]["floor"],eitc_parameters[filing_status][num_children]);
+		var phase_out_end = Math.round(eitc_parameters[filing_status][num_children][bracket]["floor"] - 
+											phase_out_start/eitc_parameters[filing_status][num_children][bracket]["rate"]);
 		
 		var eitc_amount = return_eic_amount(wages, eitc_parameters[filing_status][num_children]);
 		
@@ -113,7 +92,7 @@ function mainCalculate(triggered_by_slider) {
 		
 		//Draw the chart using the Google visualization library.
 		if (g_chart_loaded == true) {
-			drawChart(filing_status,num_children,base_amounts,phase_out_end, wages, eitc_amount, scenarioID);
+			drawChart(filing_status,num_children,phase_out_end, wages, eitc_amount, scenarioID);
         }
        
     } catch (ex) {
@@ -134,7 +113,7 @@ function return_eic_amount(wages,parms) {
 	return eitc_amount;
 };
 
-function drawChart(filing_status,num_children,base_amounts, phase_out_end, user_wages, user_eitc_amount, scenarioID) {
+function drawChart(filing_status,num_children, phase_out_end, user_wages, user_eitc_amount, scenarioID) {
 	
 	if (scenarioID) var eitc_parameters = g_eitc_parameters[scenarioID];
 	else var eitc_parameters = g_eitc_parameters;
