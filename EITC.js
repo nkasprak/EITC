@@ -105,15 +105,6 @@ function mainCalculate(triggered_by_slider) {
 		bracket = eitc_parameters[filing_status][num_children].length-1;
 		var phase_out_end = Math.round(	eitc_parameters[filing_status][num_children][bracket]["floor"] - 
 											base_amounts[bracket]/eitc_parameters[filing_status][num_children][bracket]["rate"]);
-																
-		/*//Mimic the IRS's EITC table. Round to lower 50, add 25, and calculate based on that number
-		//(i.e. 79->75, 149->125, 6001->6025)
-		var wages_rounded = Math.floor(wages/50)*50 + 25;
-		
-		//Do the actual calculation next.
-		var eitc_amount = Math.round(Math.max(0, Math.min(wages_rounded, eitc_parameters[filing_status][num_children][1]["floor"]) * eitc_parameters[filing_status][num_children][0]["rate"] + Math.max(0,wages_rounded-eitc_parameters[filing_status][num_children][2]["floor"]) * eitc_parameters[filing_status][num_children][2]["rate"]));
-		
-		if (wages == 0) eitc_amount = 0;*/
 		
 		var eitc_amount = return_eic_amount(wages, eitc_parameters[filing_status][num_children]);
 		
