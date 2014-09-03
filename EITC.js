@@ -7,6 +7,23 @@ google.setOnLoadCallback(chartLoaded);
 //Runs onces the Google Chart library is loaded from Google's servers
 function chartLoaded() {
 	
+	var slideChangeFunction = function(e) {
+		//Runs when the slider is moved
+		try {
+			
+			//Get value of slider
+			val = $('#head_slider').slider("option", "value");
+			
+			//Set wage income input to value of slider
+			$("#head_wage_income").val(val);
+			
+			//Run the calculation
+			mainCalculate(true);
+		} catch (ex) {
+			console.log(val);
+		}
+	};
+	
 	g_chart_loaded = true;
 	
 	//Assign the mainCalculate routine to run whenever an input is altered	
@@ -19,21 +36,8 @@ function chartLoaded() {
 		min:0,
 		max:g_chart_max, 
 		value:0,
-		slide:function() {
-			//Runs when the slider is moved
-			try {
-				//Get value of slider
-				val = $('#head_slider').slider("option", "value");
-				
-				//Set wage income input to value of slider
-				$("#head_wage_income").val(val);
-				
-				//Run the calculation
-				mainCalculate(true);
-			} catch (ex) {
-				console.log(val);
-			}
-		}
+		change:slideChangeFunction,
+		slide:slideChangeFunction
 	});
 	
 	//Run the calculation once initially once the chart library is loaded.
